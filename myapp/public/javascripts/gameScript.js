@@ -6,14 +6,24 @@ let revealed = [];
 let turn = 0;
 const players = [new Player(0), new Player(1)];
 
-initialize();
+setUp();
 
 // Store all the DOM objects in the array as Card objects;
-function initialize() {
+function setUp() {
     cardImagePosition.sort((a, b) => Math.random() - 0.5);
     for (let i = 0; i < 16; i++) {
         cards.push(new Card(i, cardImagePosition[i] % 8));
     }
+
+    const socket = new WebSocket("ws://localhost:3000");
+    
+    socket.onmessage = function (event) {
+        console.log(event.data);
+    };
+
+    socket.onopen = function () {
+        socket.send("Hello from the client!");
+    };
 }
 
 function revealAll() {
