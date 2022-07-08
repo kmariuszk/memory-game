@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="stylesheets/gameStyle.css">
+    <title>Memory game</title>
+</head>
+
+<body>
+    <div class="row">
+        <div class="gameBoard">
+            <input id="card0" type="image" src="images/card_deck.jpg" class="grid-item" onclick="pickCard(0)"/>
+            <input id="card1" type="image" src="images/card_deck.jpg" class="grid-item" onclick="pickCard(1)"/>
+            <input id="card2" type="image" src="images/card_deck.jpg" class="grid-item" onclick="pickCard(2)"/>
+            <input id="card3" type="image" src="images/card_deck.jpg" class="grid-item" onclick="pickCard(3)"/>
+            <input id="card4" type="image" src="images/card_deck.jpg" class="grid-item" onclick="pickCard(4)"/>
+            <input id="card5" type="image" src="images/card_deck.jpg" class="grid-item" onclick="pickCard(5)"/>
+            <input id="card6" type="image" src="images/card_deck.jpg" class="grid-item" onclick="pickCard(6)"/>
+            <input id="card7" type="image" src="images/card_deck.jpg" class="grid-item" onclick="pickCard(7)"/>
+            <input id="card8" type="image" src="images/card_deck.jpg" class="grid-item" onclick="pickCard(8)"/>
+            <input id="card9" type="image" src="images/card_deck.jpg" class="grid-item" onclick="pickCard(9)"/>
+            <input id="card10" type="image" src="images/card_deck.jpg" class="grid-item" onclick="pickCard(10)"/>
+            <input id="card11" type="image" src="images/card_deck.jpg" class="grid-item" onclick="pickCard(11)"/>
+            <input id="card12" type="image" src="images/card_deck.jpg" class="grid-item" onclick="pickCard(12)"/>
+            <input id="card13" type="image" src="images/card_deck.jpg" class="grid-item" onclick="pickCard(13)"/>
+            <input id="card14" type="image" src="images/card_deck.jpg" class="grid-item" onclick="pickCard(14)"/>
+            <input id="card15" type="image" src="images/card_deck.jpg" class="grid-item" onclick="pickCard(15)"/>
+        </div>
+        <div class="gameInfo">
+            <div id="gameTime">
+                GAME TIME: 00:00
+            </div>
+
+            <div class = 'player'>
+                YOUR SCORE:
+                <div id = 'player0'>0</div>
+            <div>
+
+            <div class = 'player'>
+                OPPONENT SCORE:
+                <div id = 'player1'>0</div>
+            </div>
+        </div>
+    </div>
+</body>
+<script src="javascripts/gameScript.js"></script>
+
+</html>
