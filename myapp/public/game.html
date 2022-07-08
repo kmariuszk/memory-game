@@ -10,7 +10,8 @@
 </head>
 
 <body>
-    <div class="row">
+    <div class="flex-container">
+
         <div class="gameBoard">
             <input id="card0" type="image" src="images/card_deck.jpg" class="grid-item" onclick="pickCard(0)"/>
             <input id="card1" type="image" src="images/card_deck.jpg" class="grid-item" onclick="pickCard(1)"/>
@@ -29,23 +30,24 @@
             <input id="card14" type="image" src="images/card_deck.jpg" class="grid-item" onclick="pickCard(14)"/>
             <input id="card15" type="image" src="images/card_deck.jpg" class="grid-item" onclick="pickCard(15)"/>
         </div>
+
         <div class="gameInfo">
             <div id="gameTime">
                 GAME TIME: 00:00
             </div>
 
-            <div class = 'player'>
+            <div class = 'score'>
                 YOUR SCORE:
                 <div id = 'player0'>0</div>
             <div>
 
-            <div class = 'player'>
+            <div class = 'score'>
                 OPPONENT SCORE:
                 <div id = 'player1'>0</div>
             </div>
         </div>
+
     </div>
 </body>
 <script src="javascripts/gameScript.js"></script>
-
 </html>

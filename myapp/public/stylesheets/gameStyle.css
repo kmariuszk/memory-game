@@ -1,10 +1,10 @@
-.row {
+.flex-container {
     display: flex;
 }
 
 .gameBoard {
     padding: 50px;
-    background-color: aquamarine;
+    background-color: #69dadb;
     flex: 75%;
     display: grid;
     grid-template-columns: auto auto auto auto;
@@ -13,19 +13,32 @@
 }
 
 .grid-item {
-    height: 100px;
-    width: 100px;
+    height: 150px;
+    width: 150px;
+    border-radius: 20%;
 }
 
 .gameInfo {
+    font-family: monospace;
+    color: white;
     text-align: center;
     padding: 50px;
-    background-color: blue;
+    background-color: #193498;
     flex: 25%;
 }
 
 #gameTime {
-    background-color: white;
-    
+    font-size: 30px;
+    font-weight: bold;
+    padding-top: 25px;
+    padding-bottom: 25px;
+    border-radius: 10%;
+    background-color: #1597e5;
+}
+
+.score {
+    padding: 50px;
+    font-size: 20px;
+    font-weight: bold;
 }
 

@@ -16,7 +16,7 @@ function setUp() {
     }
 
     const socket = new WebSocket("ws://localhost:3000");
-    
+
     socket.onmessage = function (event) {
         console.log(event.data);
     };
@@ -92,6 +92,8 @@ function pickCard(cardNumber) {
         revealed = [];
         turn++;
     }
+
+    //socket.send("I picked a card!");
 
     cards[cardNumber].reveal();
     revealed.push(cardNumber);
