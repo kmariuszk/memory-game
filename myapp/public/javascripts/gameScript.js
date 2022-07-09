@@ -21,6 +21,8 @@ socket.addEventListener("message", e => {
         else if (message.data == 'B') players = [new Player('B'), new Player('A')];
     } else if (message.type == "imagesArray") {
         attachImages(message.data);
+    } else if (message.type = "pickedCard") {
+        revealCard(message.data);
     }
 });
 
@@ -55,6 +57,9 @@ function Card(id, imageId) {
     this.availability = function () {
         return this.available;
     }
+    this.equals = function (toCompare) {
+        return this.imageId == toCompare.getImageId();
+    }
 }
 
 function Player(id) {
@@ -78,12 +83,22 @@ function pickCard(cardNumber) {
     if (!cards[cardNumber].availability()) {
         window.alert("this card is chosen!");
         return;
+    } else {
+        socket.send(JSON.stringify({
+            type: 'pickCard',
+            data: cardNumber
+        }));
+        revealCard(cardNumber);
     }
+}
+
+function revealCard(cardNumber) {
     if (revealed.length == 2) {
-        if (cards[revealed[0]].getImageId() == cards[revealed[1]].getImageId()) {
+        // When player pick a pair of cards:
+        if (cards[revealed[0]].equals(cards[revealed[1]])) {
             cards[revealed[0]].hide();
             cards[revealed[1]].hide();
-            players[turn % 2].increasePoints();
+            players[(turn + 1) % 2].increasePoints();
         } else {
             cards[revealed[0]].secrete();
             cards[revealed[1]].secrete();
@@ -91,8 +106,6 @@ function pickCard(cardNumber) {
         revealed = [];
         turn++;
     }
-
-    //socket.send("I picked a card!");
 
     cards[cardNumber].reveal();
     revealed.push(cardNumber);

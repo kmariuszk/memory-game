@@ -26,7 +26,7 @@ function Game(id) {
         if (this.playerA == null) {
             this.playerA = p;
             return "A";
-        } else if(this.playerB == null){
+        } else if (this.playerB == null) {
             this.playerB = p;
             return "B";
         }
@@ -34,7 +34,7 @@ function Game(id) {
     this.hasTwoConnectedPlayers = function () {
         return (this.playerA != null && this.playerB != null);
     }
-    this.shuffle = function() {
+    this.shuffle = function () {
         this.cardImagePosition.sort((a, b) => Math.random() - 0.5);
     }
 
@@ -49,7 +49,7 @@ let connectionID = 0; //each websocket receives a unique ID
 
 wss.on("connection", function (ws) {
     // Here I need to put all the websockets functionality, namely adding players to the game, receiving messages from the players and sending them
-    
+
     /*
     * two-player game: every two players are added to the same game
     */
@@ -65,12 +65,12 @@ wss.on("connection", function (ws) {
     con.send(JSON.stringify({
         type: 'imagesArray',
         data: currentGame.cardImagePosition
-        }));
+    }));
 
     /*
     * inform the client about its assigned player type
     */
-    if(playerType == "A") {
+    if (playerType == "A") {
         con.send(JSON.stringify({
             type: 'playerAssign',
             data: 'A'
@@ -98,43 +98,29 @@ wss.on("connection", function (ws) {
     *  2. determine the opposing player OP
     *  3. send the message to OP
     */
-    con.on("message", function incoming(message) {
-        // const oMsg = JSON.parse(message.toString());
+    con.on("message", message => {
+        const dmsg = JSON.parse(message);
 
-        // const gameObj = websockets[con["id"]];
-        // const isPlayerA = gameObj.playerA == con ? true : false;
+        const gameObj = websockets[con["id"]];
+        const isPlayerA = gameObj.playerA == con;
 
-        // if (isPlayerA) {
-        //     /*
-        //      * player A cannot do a lot, just send the target word;
-        //      * if player B is already available, send message to B
-        //      */
-        //     if (oMsg.type == messages.T_TARGET_WORD) {
-        //         gameObj.setWord(oMsg.data);
-
-        //         if (gameObj.hasTwoConnectedPlayers()) {
-        //             gameObj.playerB.send(message);
-        //         }
-        //     }
-        // } else {
-        //     /*
-        //      * player B can make a guess;
-        //      * this guess is forwarded to A
-        //      */
-        //     if (oMsg.type == messages.T_MAKE_A_GUESS) {
-        //         gameObj.playerA.send(message);
-        //         gameObj.setStatus("CHAR GUESSED");
-        //     }
-
-        //     /*
-        //      * player B can state who won/lost
-        //      */
-        //     if (oMsg.type == messages.T_GAME_WON_BY) {
-        //         gameObj.setStatus(oMsg.data);
-        //         //game was won by somebody, update statistics
-        //         gameStatus.gamesCompleted++;
-        //     }
-        // }
+        if (isPlayerA) {
+            if (dmsg.type == 'pickCard') {
+                console.log("User A in the game " + con["id"] + " picked card " + dmsg.data);
+                gameObj.playerB.send(JSON.stringify({
+                    type: 'pickedCard',
+                    data: dmsg.data
+                }));
+            }
+        } else {
+            if (dmsg.type == 'pickCard') {
+                console.log("User B in the game " + con["id"] + " picked card " + dmsg.data);
+                gameObj.playerA.send(JSON.stringify({
+                    type: 'pickedCard',
+                    data: dmsg.data
+                }));
+            }
+        }
     });
 });
 
