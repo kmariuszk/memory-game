@@ -1,35 +1,34 @@
 const gameTime = document.getElementById('gameTime');
 const cards = [];
 const cardsImagesPaths = ["images/card0.jpg", "images/card1.jpg", "images/card2.jpg", "images/card3.jpg", "images/card4.jpg", "images/card5.jpg", "images/card6.jpg", "images/card7.jpg"];
-const cardImagePosition = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
 let revealed = [];
+let players = [];
 let turn = 0;
-const players = [new Player(0), new Player(1)];
+const socket = new WebSocket("ws://localhost:3000");
 
-setUp();
+// Initialize all necessery things when client connects to the server
+socket.addEventListener("open", () => {
+    console.log("Connected to the server!");
+    // setUp();
+});
 
-// Store all the DOM objects in the array as Card objects;
-function setUp() {
-    cardImagePosition.sort((a, b) => Math.random() - 0.5);
-    for (let i = 0; i < 16; i++) {
-        cards.push(new Card(i, cardImagePosition[i] % 8));
+// Since now the player on the position 0 is 'you' and on the position 1 is 'opponent'
+socket.addEventListener("message", e => {
+    let message = JSON.parse(e.data);
+
+    if (message.type == 'playerAssign') {
+        if (message.data == 'A') players = [new Player('A'), new Player('B')];
+        else if (message.data == 'B') players = [new Player('B'), new Player('A')];
+    } else if (message.type == "imagesArray") {
+        attachImages(message.data);
     }
+});
 
-    const socket = new WebSocket("ws://localhost:3000");
-
-    socket.onmessage = function (event) {
-        console.log(event.data);
-    };
-
-    socket.onopen = function () {
-        socket.send("Hello from the client!");
-    };
-}
-
-function revealAll() {
-    cards.forEach((card) => {
-        card.reveal();
-    })
+// Attaching each image to the correct card
+function attachImages(imagesArray) {
+    for (let i = 0; i < 16; i++) {
+        cards.push(new Card(i, imagesArray[i] % 8));
+    }
 }
 
 function Card(id, imageId) {
@@ -110,4 +109,9 @@ setInterval(() => {
     }
 }, 1000);
 
-
+// Debug functions only, will be deleted eventually
+function revealAll() {
+    cards.forEach((card) => {
+        card.reveal();
+    })
+}

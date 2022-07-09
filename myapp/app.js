@@ -20,6 +20,8 @@ function Game(id) {
     this.id = id;
     this.playerA = null;
     this.playerB = null;
+    this.cardImagePosition = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
+
     this.addPlayer = function (p) {
         if (this.playerA == null) {
             this.playerA = p;
@@ -32,11 +34,17 @@ function Game(id) {
     this.hasTwoConnectedPlayers = function () {
         return (this.playerA != null && this.playerB != null);
     }
+    this.shuffle = function() {
+        this.cardImagePosition.sort((a, b) => Math.random() - 0.5);
+    }
+
+    this.shuffle();
 }
 
 let gamesInitialized = 0;
 const websockets = {}; //property: websocket, value: game
 let currentGame = new Game(gamesInitialized++); //Game object
+currentGame.shuffle();
 let connectionID = 0; //each websocket receives a unique ID
 
 wss.on("connection", function (ws) {
@@ -54,10 +62,25 @@ wss.on("connection", function (ws) {
         `Player ${con["id"]} placed in game ${currentGame.id} as ${playerType}`
     );
 
+    con.send(JSON.stringify({
+        type: 'imagesArray',
+        data: currentGame.cardImagePosition
+        }));
+
     /*
     * inform the client about its assigned player type
     */
-    con.send(playerType == "A" ? "You are player A" : "You are player B");
+    if(playerType == "A") {
+        con.send(JSON.stringify({
+            type: 'playerAssign',
+            data: 'A'
+        }));
+    } else {
+        con.send(JSON.stringify({
+            type: 'playerAssign',
+            data: 'B'
+        }));
+    }
 
     /*
     * once we have two players, there is no way back;
@@ -65,6 +88,7 @@ wss.on("connection", function (ws) {
     * if a player now leaves, the game is aborted (player is not preplaced)
     */
     if (currentGame.hasTwoConnectedPlayers()) {
+        console.log("The game " + currentGame.id + " has started!");
         currentGame = new Game(gamesInitialized++);
     }
 
