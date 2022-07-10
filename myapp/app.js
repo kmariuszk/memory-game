@@ -15,6 +15,7 @@ app.get("/", indexRouter);
 const server = http.createServer(app);
 
 const wss = new websocket.Server({ server });
+const websockets = {}; //property: websocket, value: game
 
 function Game(id) {
     this.id = id;
@@ -42,14 +43,10 @@ function Game(id) {
 }
 
 let gamesInitialized = 0;
-const websockets = {}; //property: websocket, value: game
 let currentGame = new Game(gamesInitialized++); //Game object
-currentGame.shuffle();
 let connectionID = 0; //each websocket receives a unique ID
 
 wss.on("connection", function (ws) {
-    // Here I need to put all the websockets functionality, namely adding players to the game, receiving messages from the players and sending them
-
     /*
     * two-player game: every two players are added to the same game
     */
@@ -62,13 +59,8 @@ wss.on("connection", function (ws) {
         `Player ${con["id"]} placed in game ${currentGame.id} as ${playerType}`
     );
 
-    con.send(JSON.stringify({
-        type: 'imagesArray',
-        data: currentGame.cardImagePosition
-    }));
-
     /*
-    * inform the client about its assigned player type
+    * inform the client about its assigned player type, player A starts the game
     */
     if (playerType == "A") {
         con.send(JSON.stringify({
@@ -88,6 +80,18 @@ wss.on("connection", function (ws) {
     * if a player now leaves, the game is aborted (player is not preplaced)
     */
     if (currentGame.hasTwoConnectedPlayers()) {
+
+        const gameObj = websockets[con["id"]];
+        gameObj.playerA.send(JSON.stringify({
+            type: 'imagesArray',
+            data: currentGame.cardImagePosition
+        }));
+
+        con.send(JSON.stringify({
+            type: 'imagesArray',
+            data: currentGame.cardImagePosition
+        }));
+
         console.log("The game " + currentGame.id + " has started!");
         currentGame = new Game(gamesInitialized++);
     }
@@ -103,25 +107,37 @@ wss.on("connection", function (ws) {
 
         const gameObj = websockets[con["id"]];
         const isPlayerA = gameObj.playerA == con;
+        const op = isPlayerA ? gameObj.playerB : gameObj.playerA;
 
-        if (isPlayerA) {
-            if (dmsg.type == 'pickCard') {
-                console.log("User A in the game " + con["id"] + " picked card " + dmsg.data);
-                gameObj.playerB.send(JSON.stringify({
-                    type: 'pickedCard',
-                    data: dmsg.data
-                }));
-            }
-        } else {
-            if (dmsg.type == 'pickCard') {
-                console.log("User B in the game " + con["id"] + " picked card " + dmsg.data);
-                gameObj.playerA.send(JSON.stringify({
-                    type: 'pickedCard',
-                    data: dmsg.data
-                }));
-            }
+        if (dmsg.type == 'pickCard') {
+            op.send(JSON.stringify({
+                type: 'pickedCard',
+                data: dmsg.data
+            }));
         }
     });
+
+    con.on("close", code => {
+        console.log(`${con["id"]} disconnected ...`);
+
+        const gameObj = websockets[con["id"]];
+
+        if (code == 1001) {
+            try {
+                gameObj.playerA.close();
+                gameObj.playerA = null;
+            } catch (e) {
+                console.log("Player A closing: " + e);
+            }
+
+            try {
+                gameObj.playerB.close();
+                gameObj.playerB = null;
+            } catch (e) {
+                console.log("Player B closing: " + e);
+            }
+        }
+    })
 });
 
 server.listen(port);

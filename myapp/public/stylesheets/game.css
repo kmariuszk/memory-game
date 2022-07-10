@@ -1,0 +1,64 @@
+body {
+    display: grid;
+    grid-template-columns: 70% 30%;
+    grid-template-rows: 100vh;
+}
+
+.gameBoard {
+    padding-top: 30px;
+    padding-bottom: 50px;
+    padding-left: 200px;
+    padding-right: 200px;
+    display: grid;
+    grid-template-columns: auto auto auto auto;
+    grid-gap: 20px;
+    background-color: #69dadb;
+}
+
+.center-block {
+    display: block;
+    margin: auto;
+}
+
+.gameInfo {
+    text-align: center;
+    padding-top: 100px;
+    background-color: #193498;
+    color: white;
+    font-family: monospace;
+    font-size: 30px;
+    font-weight: bold;
+}
+
+#gameTime span {
+    padding-top: 40px;
+    padding-bottom: 40px;
+    padding-left: 30px;
+    padding-right: 30px;
+    border-radius: 20px;
+    background-color: #1597e5;
+}
+
+#gameTime {
+    padding: 30px;
+}
+
+#yourScore {
+    padding-top: 25px;
+}
+
+input {
+    border-radius: 10px;
+    transition-duration: 0.5s;
+    width: 10vw;
+    height: 10vw;
+}
+
+input:hover {
+    box-shadow: 0 1em 1em -0.4em #3b7c7d;
+    transform: translateY(-0.5em);
+}
+
+input:active {
+    transform: scale(1.1);
+}
