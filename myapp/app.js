@@ -82,11 +82,14 @@ wss.on("connection", function (ws) {
     if (currentGame.hasTwoConnectedPlayers()) {
 
         const gameObj = websockets[con["id"]];
+
+        // Send the array with encoded cards positions to a player A
         gameObj.playerA.send(JSON.stringify({
             type: 'imagesArray',
             data: currentGame.cardImagePosition
         }));
 
+        // Send the array with encoded cards positions to a player B
         con.send(JSON.stringify({
             type: 'imagesArray',
             data: currentGame.cardImagePosition

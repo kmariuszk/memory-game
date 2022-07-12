@@ -1,22 +1,25 @@
 //Player object: stores all necessary informations about the player object
-function Player(id) {
-    this.id = id;
-    this.points = 0;
-    this.element;
-    this.getPoints = function () {
-        return this.points;
+class Player {
+    constructor(id, tagElement) {
+        this.id = id;
+        this.points = 0;
+        this.element = document.getElementById(tagElement);
     }
-    this.increasePoints = function () {
+
+    getPoints() {
+        return this.points;
+    };
+
+    increasePoints() {
         this.points++;
         this.refreshScore();
-    }
-    this.refreshScore = function () {
+    };
+
+    refreshScore() {
         this.element.textContent = this.points;
-    }
-    this.setElement = function (id) {
-        this.element = document.getElementById(id);
-    }
-    this.getId = function () {
+    };
+
+    getId() {
         return this.id;
-    }
+    };
 }

@@ -1,32 +1,39 @@
-function Card(id, imageId) {
-    this.id = id;
-    this.imageId = imageId;
-    this.element = document.getElementById('card' + id);
-    this.available = true;
+class Card {
 
-    this.setImage = function (path) {
-        this.element.src = path;
+    // Constructor of Card object
+    constructor(id, imagePath) {
+        this.id = id;
+        this.imagePath = imagePath;
+        this.element = document.getElementById('card' + id);
+        this.available = true;
+
+        this.secrete();
     }
-    this.reveal = function () {
+
+    // Function used to display the image of the card 
+    reveal() {
         this.available = false;
-        this.element.src = cardsImagesPaths[imageId];
-    }
-    this.secrete = function () {
+        this.element.src = this.imagePath;
+    };
+
+    // Function used to display the deck of the card
+    secrete() {
         this.available = true;
         this.element.src = "images/card_deck.jpg";
-    }   
-    this.hide = function () {
-        this.available = false;
-    }
-    this.getImageId = function () {
-        return this.imageId;
-    }
-    this.availability = function () {
-        return this.available;
-    }
-    this.equals = function (toCompare) {
-        return this.imageId == toCompare.getImageId();
-    }
+    };
 
-    this.secrete();
+    // Function used to lock the card when its image is being displayed, used once a player finds a pair
+    hide() {
+        this.available = false;
+    };
+
+    // Function returns whether chosen card can be picked
+    availability() {
+        return this.available;
+    };
+
+    // Compares images of two cards
+    equals(toCompare) {
+        return this.imagePath == toCompare.imagePath;
+    };
 }
