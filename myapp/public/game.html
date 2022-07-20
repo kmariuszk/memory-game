@@ -2,15 +2,12 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="stylesheets/game.css">
+    <link rel="stylesheet" href="stylesheets/style.css">
     <title>Memory game</title>
 </head>
 
 <body>
-
     <div class="gameBoard">
         <input id="card0" class="center-block" type="image" src="images/initial_card_deck.jpg" class="grid-item"
             onclick="pickCard(0)" />
@@ -52,13 +49,11 @@
             <span id="time">GAME TIME: --:--</span>
         </div><br>
 
-        <div id='yourScore'>
-            YOUR SCORE:
+        <div id='yourScore'>YOUR SCORE:
             <div id='player0'>0</div>
-        <div><br>
+        </div><br>
 
-        <div id='opponentScore'>
-            OPPONENT SCORE:
+        <div id='opponentScore'>OPPONENT SCORE:
             <div id='player1'>0</div>
         </div><br>
     </div>
@@ -67,5 +62,5 @@
 <script src="javascripts/intereactions.js"></script>
 <script src="javascripts/card.js"></script>
 <script src="javascripts/player.js"></script>
-
+<script src="javascripts/game.js"></script>
 </html>

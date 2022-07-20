@@ -1,78 +1,101 @@
-const gameTime = document.getElementById('time');
-// const cards = [];
-// const cardsImagesPaths = ["images/card0.jpg", "images/card1.jpg", "images/card2.jpg", "images/card3.jpg", "images/card4.jpg", "images/card5.jpg", "images/card6.jpg", "images/card7.jpg"];
-// let revealed = [];
-// let players = [];
-// let turn = 0;
-// let gameStart = false;
-
 const socket = new WebSocket("ws://localhost:3000");
-let game;
 
+var game;
+var intervalId;
+
+/**
+ * Reacts to the received server message.
+ */
 socket.addEventListener("message", e => {
     let message = JSON.parse(e.data);
-    console.log("Received a message! + " + message.type);
 
+    // Assign type of player.
     if (message.type == 'playerAssign') {
-        game = new Game();
-        game.assignPlayer(message.data);
+        this.game = new Game();
+        this.game.assignPlayer(message.data);
     }
 
-    // Receive an array with encoded positions of the cards (images)
-    else if (message.type == "imagesArray") {
+    // Receive an array with encoded positions of the cards images.
+    if (message.type == "imagesArray") {
         startTimer();
-        game.initialize(message.data);
+        this.game.initialize(message.data);
     }
-    else if (message.type = "pickedCard") {
-        revealCard(message.data);
+
+    // Reveal card which was chosen by the other player.
+    if (message.type == "pickedCard") {
+        this.game.revealCard(message.data);
+        if (this.game.isFinished()) {
+            gameOverMessage();
+        }
     }
-    else if (message.type = "gameOver") {
+
+    // Finish the game.
+    if (message.type == "gameFinished") {
         finishTheGame();
     }
 });
 
-// // Attaching each image to the correct card
-// function attachImages(imagesArray) {
-//     for (let i = 0; i < 16; i++) {
-//         cards.push(new Card(i, cardsImagesPaths[imagesArray[i] % 8]));
-//     }
-//     console.log('Images attached!');
-// }
-
-
+/**
+ * Player picks the card.
+ * 
+ * @param  {Integer} cardNumber - position of the picked card.
+ */
 function pickCard(cardNumber) {
-    if (!game.gameStarted) {
+
+    // Game has not started yet.
+    if (!this.game.isGameStarted()) {
         window.alert("The game hasn't started yet!");
         return;
-    } else if (!game.cardAvailable(cardNumber)) {
+    }
+
+    // Card is not available to pick.
+    else if (!this.game.cardAvailable(cardNumber)) {
         window.alert("This card is not available anymore!");
         return;
-    } else if (game.canPickMoreCards()) {
+    }
+
+    // Player cannot pick anymore cards.
+    else if (!this.game.canPickMoreCards()) {
         window.alert("You can pick only two cards!");
         return;
-    } else if (!game.isItMineTurn()) {
-        window.alert("It's yours opponent turn!");
+    }
+
+    // Opponents turn. 
+    else if (!this.game.isItMineTurn()) {
+        window.alert("It's your opponents turn!");
         return;
-    } else {
-        // Player sends information about the chosen card to the server
+    }
+
+    // Player pick card and server is informed about it.
+    else {
         socket.send(JSON.stringify({
             type: 'pickCard',
             data: cardNumber
         }));
-        revealCard(cardNumber);
+        this.game.revealCard(cardNumber);
     }
 }
 
-// function isOver() {
-//     if (players[0].getPoints() + players[1].getPoints() == 8) {
-//         finishTheGame();
-//     }
-// }
-
+/**
+ * When connection with the server is closed.
+ */
+socket.onclose = function () {
+    if (isAborted()) {
+        stopTimer();
+        if (!window.alert("Unfortunately you're opponent has left the game.")) {
+            window.location = "http://localhost:3000/";
+        }
+    }
+}
+/**
+ * Start the timer of the game.
+ */
 function startTimer() {
+    const gameTime = document.getElementById('time');
+
     let start = Date.now();
 
-    setInterval(() => {
+    intervalId = setInterval(() => {
         let delta = Math.floor((Date.now() - start) / 1000);
         let minutes = Math.floor(delta / 60);
         let seconds = delta % 60;
@@ -80,28 +103,43 @@ function startTimer() {
         gameTime.textContent = 'GAME TIME: ' + (minutes < 10 ? '0' + minutes : minutes) + ":" + (seconds < 10 ? '0' + seconds : seconds);
     }, 1000);
 }
+/**
+ * Stops the timer of the game.
+ */
+function stopTimer() {
+    clearInterval(intervalId);
+}
 
-socket.onclose = function () {
-    if (!alert("Unfortunatelly, your opponent has aborted the game.")) window.location = "http://localhost:3000/";
-};
+/**
+ * Send a gameOver message to the server when the game is over.
+ */
+function gameOverMessage() {
+    socket.send(JSON.stringify({
+        type: 'gameOver',
+    }));
+}
 
+/**
+ * Returns whether the game is finished.
+ */
+function isAborted() {
+    return !this.game.isFinished();
+}
+
+/**
+ * Displays the final message to a player and ask what they want to do.
+ */
 function finishTheGame() {
+    let finalMessage = this.game.finalMessage();
+    stopTimer();
 
-    let txt = "";
+    setTimeout(() => {
+        finalMessage += " Would you like to play one more game?";
 
-    if (players[1].getPoints() > players[0].getPoints()) {
-        txt = "The game is over! Unfortunately, you lost.";
-    } else if (players[1].getPoints() == players[0].getPoints()) {
-        txt = "It was a good game! But there's no winner, the game is drawn.";
-    } else {
-        txt = "Congratulations! You won the game!";
-    }
-
-    txt += " Would you like to play one more game?";
-
-    if (confirm(txt)) {
-        window.location.reload();
-    } else {
-        window.location = "http://localhost:3000/";
-    }
+        if (confirm(finalMessage)) {
+            window.location.reload();
+        } else {
+            window.location = "http://localhost:3000/";
+        }
+    }, 500);
 }

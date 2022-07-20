@@ -1,6 +1,14 @@
+/**
+ * Card class contain information about each card.
+ */
 class Card {
 
-    // Constructor of Card object
+    /**
+     * Construct a card object.
+     * 
+     * @param  {Integer} id - the id of the card.
+     * @param  {String} imagePath - the path of the cards image.
+     */
     constructor(id, imagePath) {
         this.id = id;
         this.imagePath = imagePath;
@@ -10,29 +18,41 @@ class Card {
         this.secrete();
     }
 
-    // Function used to display the image of the card 
+    /**
+     * Display the image of the card.
+     */
     reveal() {
         this.available = false;
         this.element.src = this.imagePath;
     };
 
-    // Function used to display the deck of the card
+    /**
+     * Reverse card back (display the back of the card).
+     */
     secrete() {
         this.available = true;
         this.element.src = "images/card_deck.jpg";
     };
 
-    // Function used to lock the card when its image is being displayed, used once a player finds a pair
+    /**
+     * Lock card unrevealed (when player finds a pair).
+     */
     hide() {
         this.available = false;
     };
 
-    // Function returns whether chosen card can be picked
+    /** 
+     * Returns whether a card can be picked.
+     */
     availability() {
         return this.available;
     };
 
-    // Compares images of two cards
+    /**
+     * Compares images of two cards.
+     * 
+     * @param  {Card} toCompare - the other card to compare with this.
+     */
     equals(toCompare) {
         return this.imagePath == toCompare.imagePath;
     };

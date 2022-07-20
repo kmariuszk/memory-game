@@ -1,10 +1,3 @@
-body {
-    display: grid;
-    grid-template-columns: 70% 30%;
-    grid-template-rows: 100vh;
-    position: absolute;
-}
-
 #left {
     padding-left: 40px;
     padding-right: 200px;

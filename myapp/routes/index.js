@@ -1,12 +1,18 @@
 var express = require('express');
 var router = express.Router();
 
-/* GET home page */ 
+const gameStatus = require("../statTracker");
+
+/* GET splash page */ 
 router.get("/", function(req, res) {
-  res.sendFile("splash.html", { root: "./public" });
+  res.render("splash.ejs", {
+    usersOnline: gameStatus.usersOnline, 
+    gameStarted: gameStatus.gameStarted,
+    gamesCompleted: gameStatus.gamesCompleted
+  });
 });
 
-/* Pressing the 'PLAY' button, returns this page */
+/* Pressing the 'PLAY' button, returns game page */
 router.get("/play", function(req, res) {
   res.sendFile("game.html", { root: "./public" });
 });

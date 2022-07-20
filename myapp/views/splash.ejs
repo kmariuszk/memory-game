@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link rel="stylesheet" href="stylesheets/splash.css">
+    <link rel="stylesheet" href="stylesheets/style.css">
+    <title>Memory game</title>
+</head>
+
+<body>
+    <div id="left">
+        <h1>MEMORY GAME</h1>
+        <h3>Memory game is a varation of the Concentration Game. The goal of the game is to turn over pairs of
+            matching cards. The winner is the player who matched the most pairs.</h3>
+
+        <div class="stats">
+            <div><span>
+                    <%= usersOnline %>
+                        <%if (usersOnline !=1) { %> users <% } else { %> user <% } %> online
+                </span></div><br>
+            <div><span>
+                    <%= gameStarted %>
+                        <%if (gameStarted !=1) { %> games <% } else { %> game <% } %> started
+                </span></div><br>
+            <div><span>
+                    <%= gamesCompleted %>
+                        <%if (gamesCompleted !=1) { %> games <% } else { %> game <% } %> completed
+                </span></div>
+        </div>
+    </div>
+    <div id="right">
+        <form action="/play">
+            <button type="submit">PLAY</button>
+        </form>
+    </div>
+</body>
+
+</html>
