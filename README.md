@@ -19,13 +19,13 @@ This is an example of how to list things you need to use the software and how to
 
 - npm
 
-'npm install npm...'
+`npm install npm...`
 
 ### Installation
 
 1. Clone the repo 
 
-'git clone ...'
+`git clone ...`
 
 
 To run a game you need to 
