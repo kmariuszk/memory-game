@@ -1,4 +1,5 @@
-const socket = new WebSocket("ws://localhost:3000");
+const webSocketUrl = "2.tcp.eu.ngrok.io:18146"; // Originally, it was: localhost:3000
+const socket = new WebSocket("ws://" + webSocketUrl);
 
 var game;
 var intervalId;
