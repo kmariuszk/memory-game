@@ -1,4 +1,4 @@
-const webSocketUrl = "2.tcp.eu.ngrok.io:18146"; // Originally, it was: localhost:3000
+const webSocketUrl = "localhost:3000"; // "2.tcp.eu.ngrok.io:18146"; Originally, it was: localhost:3000
 const socket = new WebSocket("ws://" + webSocketUrl);
 
 var game;
