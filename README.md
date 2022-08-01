@@ -4,7 +4,7 @@
 
 Description of the project.
 
-### Built With
+**Built With**
 
 - Node.js express
 ...
@@ -13,7 +13,7 @@ Description of the project.
 
 To get a local copy up and running follow these simple example steps.
 
-### Prerequisities
+**Prerequisities**
 
 This is an example of how to list things you need to use the software and how to install them.
 
@@ -21,7 +21,7 @@ This is an example of how to list things you need to use the software and how to
 
 `npm install npm...`
 
-### Installation
+**Installation**
 
 1. Clone the repo 
 
