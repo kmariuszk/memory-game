@@ -1,4 +1,10 @@
-const webSocketUrl = "localhost:3000"; // "2.tcp.eu.ngrok.io:18146"; Originally, it was: localhost:3000
+const webSocketUrl = "localhost:3000"; 
+
+/**  
+ * If you want to create a global server (instead of a local) 
+ * change the variable WebSocketUrl to the link provided by the ngrok.
+ */
+
 const socket = new WebSocket("ws://" + webSocketUrl);
 
 var game;
